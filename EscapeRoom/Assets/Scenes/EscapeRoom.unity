@@ -1102,6 +1102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameTransform: {fileID: 1881844779}
   piecePrefab: {fileID: 9147330446726999113, guid: 23df11b9f3778a04c8d01ce61458a7ff, type: 3}
+  interactionCooldown: 60
   rightRayInteractor: {fileID: 1499196917}
   leftRayInteractor: {fileID: 1032541228}
 --- !u!4 &1771180586
