@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour {
   private List<Transform> pieces;
   private int emptyLocation;
   private int size;
-  private bool shuffling = false;
+  private bool shuffling = true;
   private bool currentlyInteracting = false; 
   public UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor rightRayInteractor; // Reference to the XRRayInteractor on the right hand controller
   public UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor leftRayInteractor;  // Reference to the XRRayInteractor on the left hand controller
@@ -24,10 +24,13 @@ public class GameManager : MonoBehaviour {
         for (int col = 0; col < size; col++) {
             Transform piece = Instantiate(piecePrefab, gameTransform);
             pieces.Add(piece);
-            // Pieces will be in a game board going from -1 to +1.
-            piece.localPosition = new Vector3(0,
-                                              -1 + (2 * width * col) + width,
-                                              +1 - (2 * width * row) - width);
+
+            // In this case, the board is on a wall, and we want the top-left corner to be the starting point.
+            piece.localPosition = new Vector3(
+                0,                                    
+                1 - (2 * width * row) - width,     
+                -1 + (2 * width * col) + width   
+            );
             piece.localScale = ((2 * width) - gapThickness) * Vector3.one;
             piece.name = $"{(row * size) + col}";
 
@@ -55,68 +58,12 @@ public class GameManager : MonoBehaviour {
     }
   }
 
-  void SwapPieceAtIndex0WithName(string targetName)
-{
-    // Find the index of the piece with the name "targetName"
-    int targetIndex = -1;
-    for (int i = 0; i < pieces.Count; i++)
-    {
-        if (pieces[i].name == targetName)
-        {
-            targetIndex = i;
-            break;
-        }
-    }
-
-    // If we found the target piece
-    if (targetIndex != -1)
-    {
-        // 1. Swap their positions in the scene
-        Vector3 tempPosition = pieces[0].transform.position;
-        pieces[0].transform.position = pieces[targetIndex].transform.position;
-        pieces[targetIndex].transform.position = tempPosition;
-
-        // 2. Swap their spots in the list (GameObject references)
-        Transform temp = pieces[0];
-        pieces[0] = pieces[targetIndex];
-        pieces[targetIndex] = temp;
-
-        Debug.Log("Swapped pieces at index 0 and " + targetName);
-    }
-    else
-    {
-        Debug.LogError("Piece with name " + targetName + " not found!");
-    }
-  }
-
-  void SortPiecesByName(){
-    
-    bool sorted = false;
-    while (!sorted)
-    {
-        sorted = true;  // Assume the list is sorted until proven otherwise
-        
-        // Loop through the pieces list and compare each one
-        for (int i = 1; i < pieces.Count; i++)
-        {
-            if (string.Compare(pieces[0].name, pieces[i].name) > 0)
-            {
-                SwapPieceAtIndex0WithName(pieces[i].name);
-                print($"swapped {i}");
-                sorted = false;  // List is not sorted yet, keep looping
-                break; 
-            }
-            print($"already correct: {i}");
-        }
-    }
-  }
-
 
 
   // Start is called before the first frame update
   void Start() {
     pieces = new List<Transform>();
-    size = 5;
+    size = 3;
     CreateGamePieces(0.01f);
 
     foreach (var piece in pieces)
@@ -130,8 +77,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    SortPiecesByName();
-    
+    StartCoroutine(WaitShuffle(0.5f));
   }
 
   // Update is called once per frame
@@ -207,34 +153,34 @@ public class GameManager : MonoBehaviour {
     return true;
   }
 
-  // private IEnumerator WaitShuffle(float duration) {
-  //   yield return new WaitForSeconds(duration);
-  //   Shuffle(100);
-  //   shuffling = false;
-  // }
+  private IEnumerator WaitShuffle(float duration) {
+    yield return new WaitForSeconds(duration);
+    Shuffle(30);
+    shuffling = false;
+  }
 
-  // // Brute force shuffling.
-  // private void Shuffle(int shuffleAmount) {
-  //   int count = 0;
-  //   int last = 0;
-  //   while (count < shuffleAmount) {
-  //     // Pick a random location.
-  //     int rnd = Random.Range(0, size * size);
-  //     // Only thing we forbid is undoing the last move.
-  //     if (rnd == last) { continue; }
-  //     last = emptyLocation;
-  //     // Try surrounding spaces looking for valid move.
-  //     if (SwapIfValid(rnd, -size, size)) {
-  //       count++;
-  //     } else if (SwapIfValid(rnd, +size, size)) {
-  //       count++;
-  //     } else if (SwapIfValid(rnd, -1, 0)) {
-  //       count++;
-  //     } else if (SwapIfValid(rnd, +1, size - 1)) {
-  //       count++;
-  //     }
-  //   }
-  // }
+  // Brute force shuffling.
+  private void Shuffle(int shuffleAmount) {
+    int count = 0;
+    int last = 0;
+    while (count < shuffleAmount) {
+      // Pick a random location.
+      int rnd = Random.Range(0, size * size);
+      // Only thing we forbid is undoing the last move.
+      if (rnd == last) { continue; }
+      last = emptyLocation;
+      // Try surrounding spaces looking for valid move.
+      if (SwapIfValid(rnd, -size, size)) {
+        count++;
+      } else if (SwapIfValid(rnd, +size, size)) {
+        count++;
+      } else if (SwapIfValid(rnd, -1, 0)) {
+        count++;
+      } else if (SwapIfValid(rnd, +1, size - 1)) {
+        count++;
+      }
+    }
+  }
 }
 
 
