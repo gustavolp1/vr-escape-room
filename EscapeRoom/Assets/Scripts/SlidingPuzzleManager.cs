@@ -7,11 +7,13 @@ using TMPro;
 public class GameManager : MonoBehaviour {
   [SerializeField] private Transform gameTransform;
   [SerializeField] private Transform piecePrefab;
+  [SerializeField] private GameObject keyPrefab;
 
   private List<Transform> pieces;
   private int emptyLocation;
   private int size;
   private bool shuffling = true;
+  private bool won = false;
   private bool currentlyInteracting = false; 
   public UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor rightRayInteractor; // Reference to the XRRayInteractor on the right hand controller
   public UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor leftRayInteractor;  // Reference to the XRRayInteractor on the left hand controller
@@ -62,6 +64,9 @@ public class GameManager : MonoBehaviour {
 
   // Start is called before the first frame update
   void Start() {
+
+    keyPrefab.SetActive(false);
+
     pieces = new List<Transform>();
     size = 3;
     CreateGamePieces(0.01f);
@@ -84,8 +89,12 @@ public class GameManager : MonoBehaviour {
   void Update() {
 
     // Check for completion.
-    if (!shuffling && CheckCompletion()) {
-      print("You gosh darn did it! - Respectuflly, the sliding puzzle");
+    if (!shuffling && !won) {
+      if (CheckCompletion()){
+        print("You gosh darn did it! - Respectuflly, the sliding puzzle");
+        keyPrefab.SetActive(true);
+        won = true;
+      }
     }
 
   }
@@ -137,16 +146,8 @@ public class GameManager : MonoBehaviour {
     }
 
     for (int i = 0; i < pieces.Count; i++) {
-        int expectedRow = i / size;
-        int expectedCol = i % size;
-        Vector3 expectedPosition = new Vector3(
-            -1 + (2 * (1f / size) * expectedCol) + (1f / size),
-            +1 - (2 * (1f / size) * expectedRow) - (1f / size),
-            0
-        );
-
-        if (pieces[i].localPosition != expectedPosition) {
-            return false;
+        if (pieces[i].name != $"{i}") {
+          return false;
         }
     }
 
@@ -155,7 +156,7 @@ public class GameManager : MonoBehaviour {
 
   private IEnumerator WaitShuffle(float duration) {
     yield return new WaitForSeconds(duration);
-    Shuffle(30);
+    Shuffle(31);
     shuffling = false;
   }
 
