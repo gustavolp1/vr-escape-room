@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using TMPro;
 
 public class OrderPuzzleManager : MonoBehaviour
 {
@@ -9,9 +10,14 @@ public class OrderPuzzleManager : MonoBehaviour
 
     private int currentIndex = 0;
     private AudioSource audioSource;
+    private bool puzzleSolved = false;
 
     public AudioClip successSound; // Assign in Inspector
     public AudioClip failSound; // Assign in Inspector
+    public TextMeshPro feedbackText; // Assign in Inspector
+    public Color correctColor = Color.green;
+    public Color wrongColor = Color.red;
+    public List<Color> inputColors; // Assign different colors for inputs in Inspector
 
     void Start()
     {
@@ -21,30 +27,56 @@ public class OrderPuzzleManager : MonoBehaviour
         {
             Debug.LogError("AudioSource component missing on OrderPuzzleManager!");
         }
+        
+        if (feedbackText != null)
+        {
+            feedbackText.text = "";
+        }
     }
 
     public void RegisterInteraction(UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable interactedCube)
     {
-        if (currentIndex < correctSequence.Count)
-        {
-            if (interactedCube == correctSequence[currentIndex])
-            {
-                playerSequence.Add(interactedCube);
-                currentIndex++;
+        if (puzzleSolved) return; // Ignore inputs if the puzzle is already solved
 
-                if (currentIndex == correctSequence.Count)
+        playerSequence.Add(interactedCube);
+        UpdateFeedbackText();
+
+        if (playerSequence.Count == correctSequence.Count)
+        {
+            if (IsSequenceCorrect())
+            {
+                Debug.Log("Puzzle Solved!");
+                PlaySound(successSound);
+                puzzleSolved = true; // Disable further inputs
+                if (feedbackText != null)
                 {
-                    Debug.Log("Puzzle Solved!");
-                    PlaySound(successSound); // Play success sound
+                    feedbackText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(correctColor) + ">SOLVED!</color>";
                 }
             }
             else
             {
                 Debug.Log("Wrong sequence! Restarting...");
-                PlaySound(failSound); // Play failure sound
+                PlaySound(failSound);
+                if (feedbackText != null)
+                {
+                    feedbackText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(wrongColor) + ">WRONG!</color>";
+                    StartCoroutine(ClearFeedbackAfterDelay(2f));
+                }
                 ResetPuzzle();
             }
         }
+    }
+
+    private bool IsSequenceCorrect()
+    {
+        for (int i = 0; i < correctSequence.Count; i++)
+        {
+            if (playerSequence[i] != correctSequence[i])
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void ResetPuzzle()
@@ -58,6 +90,35 @@ public class OrderPuzzleManager : MonoBehaviour
         if (audioSource != null && clip != null)
         {
             audioSource.PlayOneShot(clip); // Plays without overriding the AudioSource's main clip
+        }
+    }
+
+    private void UpdateFeedbackText()
+    {
+        if (feedbackText != null)
+        {
+            feedbackText.text = GetColoredInputSequence();
+        }
+    }
+
+    private string GetColoredInputSequence()
+    {
+        List<string> sequence = new List<string>();
+        for (int i = 0; i < playerSequence.Count; i++)
+        {
+            int index = correctSequence.IndexOf(playerSequence[i]);
+            string colorCode = (index >= 0 && index < inputColors.Count) ? ColorUtility.ToHtmlStringRGB(inputColors[index]) : "FFFFFF";
+            sequence.Add("<color=#" + colorCode + ">" + (index + 1).ToString() + "</color>");
+        }
+        return string.Join(" ", sequence);
+    }
+
+    private System.Collections.IEnumerator ClearFeedbackAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (playerSequence.Count == 0 && feedbackText != null) // Only clear if no new inputs were made
+        {
+            feedbackText.text = "";
         }
     }
 }
