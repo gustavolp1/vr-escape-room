@@ -10563,6 +10563,7 @@ MonoBehaviour:
   gameTransform: {fileID: 1881844779}
   piecePrefab: {fileID: 9147330446726999113, guid: 23df11b9f3778a04c8d01ce61458a7ff, type: 3}
   keyPrefab: {fileID: 871786655}
+  successSound: {fileID: 8300000, guid: fb76fcf679dad8f4683e1d650a6ac054, type: 3}
   rightRayInteractor: {fileID: 1499196917}
   leftRayInteractor: {fileID: 1032541228}
 --- !u!4 &1771180586
@@ -10725,7 +10726,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: bd9cbc27d48f65f48b2af2867be1c108, type: 3}
   m_Resource: {fileID: 8300000, guid: bd9cbc27d48f65f48b2af2867be1c108, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0

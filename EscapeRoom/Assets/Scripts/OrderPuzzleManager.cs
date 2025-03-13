@@ -18,7 +18,7 @@ public class OrderPuzzleManager : MonoBehaviour
     public Color wrongColor = Color.red;
     public List<Color> inputColors;
 
-    private SceneAudioManager sceneAudioManager; // Reference to the SceneAudioManager
+    private SceneAudioManager sceneAudioManager;
 
     void Start()
     {
@@ -36,7 +36,7 @@ public class OrderPuzzleManager : MonoBehaviour
         }
 
         // Find the SceneAudioManager in the scene
-        sceneAudioManager = FindObjectOfType<SceneAudioManager>();
+        sceneAudioManager = FindFirstObjectByType<SceneAudioManager>();
         if (sceneAudioManager == null)
         {
             Debug.LogError("SceneAudioManager not found in the scene!");

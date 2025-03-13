@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour {
   [SerializeField] private GameObject keyPrefab;
   private AudioSource audioData;
 
+  public AudioClip successSound;
+
   private List<Transform> pieces;
   private int emptyLocation;
   private int size;
@@ -154,6 +156,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    audioData.PlayOneShot(successSound);
     return true;
   }
 
