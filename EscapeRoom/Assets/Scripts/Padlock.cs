@@ -7,6 +7,8 @@ public class Padlock : MonoBehaviour
     {
         if (other.gameObject.name.Contains("Key"))
         {
+            AudioSource audioData = GetComponentInParent<AudioSource>();
+            audioData.Play();
             Destroy(other.gameObject);
             Destroy(gameObject);
         }

@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
   [SerializeField] private Transform gameTransform;
   [SerializeField] private Transform piecePrefab;
   [SerializeField] private GameObject keyPrefab;
+  private AudioSource audioData;
 
   private List<Transform> pieces;
   private int emptyLocation;
@@ -66,6 +67,7 @@ public class GameManager : MonoBehaviour {
   void Start() {
 
     keyPrefab.SetActive(false);
+    audioData = GetComponent<AudioSource>();
 
     pieces = new List<Transform>();
     size = 3;
@@ -105,6 +107,7 @@ public class GameManager : MonoBehaviour {
           var piece = pieces[i];
           if (piece.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>().isSelected && !currentlyInteracting)
           {
+              audioData.Play();
               // Check each direction to see if valid move
               if (SwapIfValid(i, -size, size)) { break; }
               if (SwapIfValid(i, +size, size)) { break; }
