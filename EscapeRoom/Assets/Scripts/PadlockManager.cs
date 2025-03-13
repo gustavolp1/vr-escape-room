@@ -31,9 +31,8 @@ public class PadlockManager : MonoBehaviour
 
     private async void HandleEmptyList()
     {
-        Debug.Log("The list is empty! Waiting for 5 seconds...");
-        await Task.Delay(5000);
-        Debug.Log("Redirecting to another scene...");
-        SceneManager.LoadScene("WinScreen");
+        Debug.Log("The list is empty! Waiting for 1 second...");
+        await Task.Delay(1000);
+        SceneManager.LoadScene("Victory");
     }
 }

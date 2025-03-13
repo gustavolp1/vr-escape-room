@@ -5,6 +5,7 @@ using TMPro;
 
 public class OrderPuzzleManager : MonoBehaviour
 {
+    [SerializeField] private GameObject keyPrefab;
     public List<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable> correctSequence; // Assign cubes in correct order via Inspector
     private List<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable> playerSequence = new List<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable>();
 
@@ -21,6 +22,8 @@ public class OrderPuzzleManager : MonoBehaviour
 
     void Start()
     {
+
+        keyPrefab.SetActive(false);
         audioSource = GetComponent<AudioSource>();
 
         if (audioSource == null)
@@ -47,6 +50,7 @@ public class OrderPuzzleManager : MonoBehaviour
             {
                 Debug.Log("Puzzle Solved!");
                 PlaySound(successSound);
+                keyPrefab.SetActive(true);
                 puzzleSolved = true; // Disable further inputs
                 if (feedbackText != null)
                 {
