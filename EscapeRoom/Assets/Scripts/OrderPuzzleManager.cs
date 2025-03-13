@@ -1,27 +1,27 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 using TMPro;
 
 public class OrderPuzzleManager : MonoBehaviour
 {
     [SerializeField] private GameObject keyPrefab;
-    public List<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable> correctSequence; // Assign cubes in correct order via Inspector
+    public List<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable> correctSequence;
     private List<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable> playerSequence = new List<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable>();
 
     private AudioSource audioSource;
     private bool puzzleSolved = false;
 
-    public AudioClip successSound; // Assign in Inspector
-    public AudioClip failSound; // Assign in Inspector
-    public TextMeshPro feedbackText; // Assign in Inspector
+    public AudioClip successSound;
+    public AudioClip failSound;
+    public TextMeshPro feedbackText;
     public Color correctColor = Color.green;
     public Color wrongColor = Color.red;
-    public List<Color> inputColors; // Assign different colors for inputs in Inspector
+    public List<Color> inputColors;
+
+    private SceneAudioManager sceneAudioManager; // Reference to the SceneAudioManager
 
     void Start()
     {
-
         keyPrefab.SetActive(false);
         audioSource = GetComponent<AudioSource>();
 
@@ -29,16 +29,23 @@ public class OrderPuzzleManager : MonoBehaviour
         {
             Debug.LogError("AudioSource component missing on OrderPuzzleManager!");
         }
-        
+
         if (feedbackText != null)
         {
             feedbackText.text = "";
+        }
+
+        // Find the SceneAudioManager in the scene
+        sceneAudioManager = FindObjectOfType<SceneAudioManager>();
+        if (sceneAudioManager == null)
+        {
+            Debug.LogError("SceneAudioManager not found in the scene!");
         }
     }
 
     public void RegisterInteraction(UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable interactedCube)
     {
-        if (puzzleSolved) return; // Ignore inputs if the puzzle is already solved
+        if (puzzleSolved) return;
 
         playerSequence.Add(interactedCube);
         UpdateFeedbackText();
@@ -50,10 +57,17 @@ public class OrderPuzzleManager : MonoBehaviour
                 Debug.Log("Puzzle Solved!");
                 PlaySound(successSound);
                 keyPrefab.SetActive(true);
-                puzzleSolved = true; // Disable further inputs
+                puzzleSolved = true;
+
                 if (feedbackText != null)
                 {
                     feedbackText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(correctColor) + ">SOLVED!</color>";
+                }
+
+                // Switch background music after puzzle is solved
+                if (sceneAudioManager != null)
+                {
+                    sceneAudioManager.SwitchToAlternateLoop();
                 }
             }
             else
@@ -91,7 +105,7 @@ public class OrderPuzzleManager : MonoBehaviour
     {
         if (audioSource != null && clip != null)
         {
-            audioSource.PlayOneShot(clip); // Plays without overriding the AudioSource's main clip
+            audioSource.PlayOneShot(clip);
         }
     }
 
@@ -118,7 +132,7 @@ public class OrderPuzzleManager : MonoBehaviour
     private System.Collections.IEnumerator ClearFeedbackAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (playerSequence.Count == 0 && feedbackText != null) // Only clear if no new inputs were made
+        if (playerSequence.Count == 0 && feedbackText != null)
         {
             feedbackText.text = "";
         }

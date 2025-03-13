@@ -7,7 +7,7 @@ public class OrderPuzzleTaiko : MonoBehaviour
 
     void Start()
     {
-        orderPuzzleManager = FindFirstObjectByType<OrderPuzzleManager>(); // Find the manager in the scene
+        orderPuzzleManager = FindFirstObjectByType<OrderPuzzleManager>();
         if (orderPuzzleManager == null)
             Debug.LogError("OrderPuzzleManager not found in the scene!");
     }
