@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class OrderPuzzleCube : MonoBehaviour
+public class OrderPuzzleTaiko : MonoBehaviour
 {
     private OrderPuzzleManager orderPuzzleManager;
 

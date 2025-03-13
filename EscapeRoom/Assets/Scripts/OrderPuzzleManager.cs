@@ -9,7 +9,6 @@ public class OrderPuzzleManager : MonoBehaviour
     public List<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable> correctSequence; // Assign cubes in correct order via Inspector
     private List<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable> playerSequence = new List<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable>();
 
-    private int currentIndex = 0;
     private AudioSource audioSource;
     private bool puzzleSolved = false;
 
@@ -86,7 +85,6 @@ public class OrderPuzzleManager : MonoBehaviour
     private void ResetPuzzle()
     {
         playerSequence.Clear();
-        currentIndex = 0;
     }
 
     private void PlaySound(AudioClip clip)
