@@ -18,8 +18,8 @@ public class GameManager : MonoBehaviour {
   private bool shuffling = true;
   private bool won = false;
   private bool currentlyInteracting = false; 
-  public UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor rightRayInteractor; // Reference to the XRRayInteractor on the right hand controller
-  public UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor leftRayInteractor;  // Reference to the XRRayInteractor on the left hand controller
+  public UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor rightRayInteractor;
+  public UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor leftRayInteractor;
 
   // Create the game setup with size x size pieces.
   private void CreateGamePieces(float gapThickness) {
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour {
             piece.name = $"{(row * size) + col}";
 
             TextMeshPro textComponent = piece.GetComponentInChildren<TextMeshPro>();
-            textComponent.text = piece.name;
+            textComponent.text = "";
 
             // We want an empty space in the bottom right.
             if ((row == size - 1) && (col == size - 1)) {
@@ -62,8 +62,6 @@ public class GameManager : MonoBehaviour {
         }
     }
   }
-
-
 
   // Start is called before the first frame update
   void Start() {
@@ -142,7 +140,6 @@ public class GameManager : MonoBehaviour {
 
     return false;
 }
-
 
   // We name the pieces in order so we can use this to check completion.
   private bool CheckCompletion() {

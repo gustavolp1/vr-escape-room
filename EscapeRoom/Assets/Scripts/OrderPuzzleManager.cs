@@ -122,7 +122,7 @@ public class OrderPuzzleManager : MonoBehaviour
         List<string> sequence = new List<string>();
         for (int i = 0; i < playerSequence.Count; i++)
         {
-            int drumNumber = GetDrumNumber(playerSequence[i]); // Correctly assign based on drum
+            int drumNumber = GetDrumNumber(playerSequence[i]);
             string colorCode = (drumNumber > 0 && drumNumber - 1 < inputColors.Count) ? 
                                ColorUtility.ToHtmlStringRGB(inputColors[drumNumber - 1]) : "FFFFFF";
             sequence.Add("<color=#" + colorCode + ">" + drumNumber.ToString() + "</color>");
@@ -152,7 +152,7 @@ public class OrderPuzzleManager : MonoBehaviour
             case "TaikoYellow":
                 return 4;
             default:
-                return 0; // Unknown object
+                return 0;
         }
     }
 }
