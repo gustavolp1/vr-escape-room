@@ -122,9 +122,10 @@ public class OrderPuzzleManager : MonoBehaviour
         List<string> sequence = new List<string>();
         for (int i = 0; i < playerSequence.Count; i++)
         {
-            int index = correctSequence.IndexOf(playerSequence[i]);
-            string colorCode = (index >= 0 && index < inputColors.Count) ? ColorUtility.ToHtmlStringRGB(inputColors[index]) : "FFFFFF";
-            sequence.Add("<color=#" + colorCode + ">" + (index + 1).ToString() + "</color>");
+            int drumNumber = GetDrumNumber(playerSequence[i]); // Correctly assign based on drum
+            string colorCode = (drumNumber > 0 && drumNumber - 1 < inputColors.Count) ? 
+                               ColorUtility.ToHtmlStringRGB(inputColors[drumNumber - 1]) : "FFFFFF";
+            sequence.Add("<color=#" + colorCode + ">" + drumNumber.ToString() + "</color>");
         }
         return string.Join(" ", sequence);
     }
@@ -135,6 +136,23 @@ public class OrderPuzzleManager : MonoBehaviour
         if (playerSequence.Count == 0 && feedbackText != null)
         {
             feedbackText.text = "";
+        }
+    }
+
+    private int GetDrumNumber(UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable drum)
+    {
+        switch (drum.gameObject.name)
+        {
+            case "TaikoRed":
+                return 1;
+            case "TaikoBlue":
+                return 2;
+            case "TaikoGreen":
+                return 3;
+            case "TaikoYellow":
+                return 4;
+            default:
+                return 0; // Unknown object
         }
     }
 }

@@ -1,0 +1,1 @@
+C:\Users\Gustavo Lindenberg\vr-escape-room\EscapeRoom\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\cxx\RelWithDebInfo\2q162z42\obj\arm64-v8a

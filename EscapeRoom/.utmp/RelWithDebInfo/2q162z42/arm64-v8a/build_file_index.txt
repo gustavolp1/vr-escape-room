@@ -1,0 +1,2 @@
+C:\Users\Gustavo Lindenberg\vr-escape-room\EscapeRoom\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+C:\Users\Gustavo Lindenberg\vr-escape-room\EscapeRoom\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\CMakeLists.txt
